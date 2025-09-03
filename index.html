@@ -1,400 +1,277 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="h-full bg-gray-100">
+
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Audax Ireland RRTY</title>
-    <link rel="manifest" href="./manifest.json">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap" rel="stylesheet">
-    <script src="https://cdn.tailwindcss.com"></script>
-    <style>
-        body {
-            font-family: 'Inter', sans-serif;
-        }
-        .section-container {
-            display: none;
-        }
-        .section-container.active {
-            display: block;
-        }
-        .loading-spinner {
-            display: none;
-            border-top: 4px solid #3b82f6;
-            border-right: 4px solid transparent;
-            border-bottom: 4px solid #3b82f6;
-            border-left: 4px solid transparent;
-            border-radius: 50%;
-            width: 2rem;
-            height: 2rem;
-            animation: spin 1s linear infinite;
-        }
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>RRTY Registration</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    body {
+      font-family: 'Inter', sans-serif;
+    }
+
+    .message-box {
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      background-color: white;
+      padding: 1.5rem;
+      border-radius: 0.5rem;
+      box-shadow: 0 10px 15px rgba(0, 0, 0, 0.1);
+      z-index: 1000;
+      text-align: center;
+      max-width: 90%;
+      width: 400px;
+    }
+
+    .overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0, 0, 0, 0.5);
+      z-index: 999;
+    }
+  </style>
+  <link rel="manifest" href="manifest.json">
+  <link rel="apple-touch-icon" href="icons/icon-192x192.png">
 </head>
-<body class="bg-gray-100 min-h-screen text-gray-800 flex flex-col items-center">
 
-    <header class="bg-white shadow w-full">
-        <nav class="container mx-auto px-4 py-4 flex flex-col sm:flex-row justify-between items-center">
-            <h1 class="text-2xl font-bold text-gray-900">Audax Ireland RRTY</h1>
-            <div class="mt-4 sm:mt-0 space-x-2">
-                <button id="nav-register" class="text-sm sm:text-base px-4 py-2 rounded-lg font-medium text-white bg-green-600 hover:bg-green-700 transition-colors">Register</button>
-                <button id="nav-submit" class="text-sm sm:text-base px-4 py-2 rounded-lg font-medium text-white bg-blue-600 hover:bg-blue-700 transition-colors">Submit Ride</button>
-                <button id="nav-dashboard" class="text-sm sm:text-base px-4 py-2 rounded-lg font-medium text-white bg-gray-600 hover:bg-gray-700 transition-colors">Dashboard</button>
-            </div>
-        </nav>
-    </header>
-
-    <main class="container mx-auto px-4 py-8 flex-1 w-full max-w-2xl">
-        
-        <section id="registration-section" class="section-container active bg-white p-6 rounded-xl shadow-lg">
-            <h2 class="text-xl font-bold mb-4 text-center">Registration</h2>
-            <form id="registration-form" class="space-y-4">
-                <div>
-                    <label for="fullName" class="block text-sm font-medium text-gray-700">Full Name</label>
-                    <input type="text" id="fullName" name="fullName" required class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-green-500 focus:ring-green-500">
-                </div>
-                <div>
-                    <label for="membershipNumber" class="block text-sm font-medium text-gray-700">Audax Ireland Membership Number (Optional)</label>
-                    <input type="text" id="membershipNumber" name="membershipNumber" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-green-500 focus:ring-green-500">
-                </div>
-                <div>
-                    <label for="intendedDate" class="block text-sm font-medium text-gray-700">Date of Intended Ride</label>
-                    <input type="date" id="intendedDate" name="intendedDate" required class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-green-500 focus:ring-green-500">
-                </div>
-                <div>
-                    <label class="block text-sm font-medium text-gray-700">Challenge Type</label>
-                    <div class="mt-2 space-y-2">
-                        <div class="flex items-center">
-                            <input type="radio" id="permanentNonAI" name="challengeType" value="Permanent (non-AI member)" data-fee="5" required class="focus:ring-green-500 h-4 w-4 text-green-600 border-gray-300">
-                            <label for="permanentNonAI" class="ml-2 block text-sm text-gray-900">Permanent (non-AI member) (€5 fee)</label>
-                        </div>
-                        <div class="flex items-center">
-                            <input type="radio" id="aiMemberRRTY" name="challengeType" value="Audax Ireland Member towards RRTY" data-fee="0" required class="focus:ring-green-500 h-4 w-4 text-green-600 border-gray-300">
-                            <label for="aiMemberRRTY" class="ml-2 block text-sm text-gray-900">Audax Ireland Member towards RRTY (no fee)</label>
-                        </div>
-                        <div class="flex items-center">
-                            <input type="radio" id="aiMemberPermanent" name="challengeType" value="Audax Ireland Member towards Permanent" data-fee="0" required class="focus:ring-green-500 h-4 w-4 text-green-600 border-gray-300">
-                            <label for="aiMemberPermanent" class="ml-2 block text-sm text-gray-900">Audax Ireland Member towards Permanent (no fee)</label>
-                        </div>
-                    </div>
-                </div>
-                <div>
-                    <div class="flex items-center">
-                        <input type="checkbox" id="medalAddon" name="medalAddon" class="focus:ring-green-500 h-4 w-4 text-green-600 border-gray-300 rounded">
-                        <label for="medalAddon" class="ml-2 block text-sm text-gray-900">Add a Single Audax Event Medal (€7 fee)</label>
-                    </div>
-                </div>
-
-                <div class="text-right font-bold text-lg">
-                    <span class="text-gray-700">Total Payment:</span> <span id="paymentSummary" class="text-green-600">€0</span>
-                </div>
-                
-                <div class="flex justify-center mt-6">
-                    <button type="submit" class="w-full sm:w-auto px-6 py-3 border border-transparent text-base font-medium rounded-md shadow-sm text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500">
-                        Submit Registration
-                    </button>
-                </div>
-            </form>
-        </section>
-
-        <section id="submission-section" class="section-container bg-white p-6 rounded-xl shadow-lg">
-            <h2 class="text-xl font-bold mb-4 text-center">Submit Ride</h2>
-            <form id="submission-form" class="space-y-4">
-                <div>
-                    <label for="submitFullName" class="block text-sm font-medium text-gray-700">Full Name</label>
-                    <input type="text" id="submitFullName" name="fullName" required class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500">
-                </div>
-                <div>
-                    <label for="stravaLink" class="block text-sm font-medium text-gray-700">Strava / Garmin Link</label>
-                    <input type="url" id="stravaLink" name="stravaLink" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500">
-                </div>
-                <div>
-                    <label for="gpxFile" class="block text-sm font-medium text-gray-700">GPX File</label>
-                    <input type="file" id="gpxFile" name="gpxFile" accept=".gpx" class="mt-1 block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100">
-                </div>
-                <div>
-                    <label for="photosFile" class="block text-sm font-medium text-gray-700">Photos / Receipts (multiple files)</label>
-                    <input type="file" id="photosFile" name="photosFile" multiple accept="image/*" class="mt-1 block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100">
-                </div>
-                <div class="flex justify-center mt-6">
-                    <button type="submit" class="w-full sm:w-auto px-6 py-3 border border-transparent text-base font-medium rounded-md shadow-sm text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
-                        Submit Ride Data
-                    </button>
-                </div>
-            </form>
-        </section>
-
-        <section id="dashboard-section" class="section-container bg-white p-6 rounded-xl shadow-lg">
-            <h2 class="text-xl font-bold mb-4 text-center">Dashboard</h2>
-            <div id="dashboard-content" class="overflow-x-auto">
-                <p id="dashboard-empty-message" class="text-center text-gray-500 hidden">No submissions yet.</p>
-                <table class="min-w-full divide-y divide-gray-200">
-                    <thead class="bg-gray-50">
-                        <tr>
-                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Name</th>
-                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Date</th>
-                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Challenge</th>
-                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
-                        </tr>
-                    </thead>
-                    <tbody id="dashboard-table-body" class="bg-white divide-y divide-gray-200">
-                    </tbody>
-                </table>
-            </div>
-            <div class="flex justify-center mt-4">
-                <div id="dashboard-spinner" class="loading-spinner"></div>
-            </div>
-        </section>
-
-    </main>
-
-    <div id="modal" class="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full hidden">
-        <div class="relative top-20 mx-auto p-5 border w-96 shadow-lg rounded-md bg-white">
-            <div class="mt-3 text-center">
-                <div id="modal-icon" class="mx-auto flex items-center justify-center h-12 w-12 rounded-full bg-green-100 text-green-600">
-                    <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
-                    </svg>
-                </div>
-                <h3 id="modal-title" class="text-lg leading-6 font-medium text-gray-900 mt-2">Success!</h3>
-                <div class="mt-2 px-7 py-3">
-                    <p id="modal-message" class="text-sm text-gray-500"></p>
-                </div>
-                <div class="items-center px-4 py-3">
-                    <button id="modal-close" class="px-4 py-2 bg-green-500 text-white text-base font-medium rounded-md w-full shadow-sm hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500">
-                        OK
-                    </button>
-                </div>
-            </div>
-        </div>
+<body class="bg-gray-50 flex items-center justify-center min-h-screen p-4 sm:p-6">
+  <div class="w-full max-w-2xl bg-white shadow-xl rounded-2xl p-6 sm:p-8">
+    <div class="flex flex-col items-center mb-6">
+      <img src="https://www.audaxireland.org/wp-content/uploads/2019/02/AudaxIrelandLogo.png" alt="Audax Ireland Logo"
+        class="h-24 w-auto mb-4 rounded-full">
+      <h1 class="text-3xl sm:text-4xl font-extrabold text-gray-800 text-center">RRTY Registration</h1>
+      <p class="mt-2 text-gray-600 text-center max-w-lg">
+        Please fill out this form to register your Audax Ireland rides for the RRTY (Randonneur Round the Year) award.
+      </p>
     </div>
 
-    <script>
-        // IMPORTANT: Paste your deployed Google Apps Script Web App URL here.
-        // It must end with /exec
-        const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzL8tKninkZb2HhfxWvxvCe4KmTHoXlWc2699IlxuTCc5fmokS5RUG1-wpbzrXGjkKYZg/exec';
+    <form id="registrationForm" class="space-y-6">
+      <div class="bg-gray-50 p-6 rounded-xl border border-gray-200">
+        <h2 class="text-xl sm:text-2xl font-bold text-gray-800 mb-4">Your Details</h2>
+        <div>
+          <label for="fullName" class="block text-sm font-medium text-gray-700">Full Name</label>
+          <input type="text" name="fullName" id="fullName" required
+            class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm p-2">
+        </div>
+        <div>
+          <label for="membershipNumber" class="block text-sm font-medium text-gray-700">Audax Ireland Membership
+            Number</label>
+          <input type="text" name="membershipNumber" id="membershipNumber"
+            class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm p-2">
+        </div>
+        <div>
+          <label for="intendedDate" class="block text-sm font-medium text-gray-700">Intended Date of Ride</label>
+          <input type="date" name="intendedDate" id="intendedDate" required
+            class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm p-2">
+        </div>
+      </div>
 
-        // PWA service worker registration
-        if ('serviceWorker' in navigator) {
-            window.addEventListener('load', () => {
-                navigator.serviceWorker.register('./service-worker.js').then(
-                    registration => console.log('Service Worker registered:', registration),
-                    err => console.error('Service Worker registration failed:', err)
-                );
-            });
-        }
+      <div class="bg-gray-50 p-6 rounded-xl border border-gray-200">
+        <h2 class="text-xl sm:text-2xl font-bold text-gray-800 mb-4">Challenge Details</h2>
+        <div>
+          <label for="challengeType" class="block text-sm font-medium text-gray-700">Challenge Type</label>
+          <select id="challengeType" name="challengeType" required
+            class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm p-2">
+            <option value="Audax Ireland Member towards RRTY">Audax Ireland Member towards RRTY</option>
+            <option value="Audax UK Member towards RRTY">Audax UK Member towards RRTY</option>
+          </select>
+        </div>
+        <div>
+          <label for="paymentAmount" class="block text-sm font-medium text-gray-700">Payment Amount (€)</label>
+          <input type="number" name="paymentAmount" id="paymentAmount" value="0" min="0" required
+            class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm p-2">
+        </div>
+      </div>
 
-        const sections = {
-            'registration': document.getElementById('registration-section'),
-            'submission': document.getElementById('submission-section'),
-            'dashboard': document.getElementById('dashboard-section')
-        };
-        const navButtons = {
-            'nav-register': document.getElementById('nav-register'),
-            'nav-submit': document.getElementById('nav-submit'),
-            'nav-dashboard': document.getElementById('nav-dashboard')
-        };
-        const registrationForm = document.getElementById('registration-form');
-        const submissionForm = document.getElementById('submission-form');
-        const paymentSummary = document.getElementById('paymentSummary');
-        const challengeTypes = document.querySelectorAll('input[name="challengeType"]');
-        const medalAddon = document.getElementById('medalAddon');
-        const modal = document.getElementById('modal');
-        const modalTitle = document.getElementById('modal-title');
-        const modalMessage = document.getElementById('modal-message');
-        const modalIcon = document.getElementById('modal-icon');
-        const modalClose = document.getElementById('modal-close');
-        const dashboardTableBody = document.getElementById('dashboard-table-body');
-        const dashboardSpinner = document.getElementById('dashboard-spinner');
-        const dashboardEmptyMessage = document.getElementById('dashboard-empty-message');
-        
-        // Navigation and UI
-        function showSection(sectionId) {
-            Object.values(sections).forEach(section => section.classList.remove('active'));
-            sections[sectionId].classList.add('active');
-            if (sectionId === 'dashboard') {
-                fetchDashboardData();
-            }
-        }
-        
-        Object.keys(navButtons).forEach(btnId => {
-            navButtons[btnId].addEventListener('click', () => {
-                showSection(btnId.replace('nav-', ''));
-            });
+      <div class="bg-gray-50 p-6 rounded-xl border border-gray-200">
+        <h2 class="text-xl sm:text-2xl font-bold text-gray-800 mb-4">Submission Links & Files</h2>
+        <div>
+          <label for="stravaLink" class="block text-sm font-medium text-gray-700">Strava Link (Optional)</label>
+          <input type="url" name="stravaLink" id="stravaLink"
+            class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm p-2">
+        </div>
+        <div>
+          <label for="gpxFile" class="block text-sm font-medium text-gray-700">GPX File (Optional)</label>
+          <input type="file" name="gpxFile" id="gpxFile" accept=".gpx"
+            class="mt-1 block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-violet-50 file:text-violet-700 hover:file:bg-violet-100">
+        </div>
+        <div>
+          <label for="photosFile" class="block text-sm font-medium text-gray-700">Photos (Optional)</label>
+          <input type="file" name="photosFile" id="photosFile" accept="image/*" multiple
+            class="mt-1 block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-violet-50 file:text-violet-700 hover:file:bg-violet-100">
+        </div>
+      </div>
+
+      <div class="flex flex-col sm:flex-row space-y-4 sm:space-y-0 sm:space-x-4">
+        <button type="submit"
+          class="flex-1 w-full flex justify-center py-3 px-6 border border-transparent rounded-full shadow-sm text-lg font-bold text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition-colors">
+          Submit Registration
+        </button>
+        <button type="button" id="debugButton"
+          class="flex-1 w-full flex justify-center py-3 px-6 border border-gray-300 rounded-full shadow-sm text-lg font-bold text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition-colors">
+          Debug Test Submission
+        </button>
+      </div>
+
+    </form>
+    <div id="loadingMessage" class="hidden text-center mt-6 text-indigo-600 font-semibold animate-pulse">
+      Submitting...
+    </div>
+    <div id="messageContainer"></div>
+  </div>
+
+  <script>
+    // IMPORTANT: Replace this with your actual Apps Script Web App URL.
+    const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzl4Z8C1lHfcfUP1HMuM6DYwOKqACqKF6HLHKsdGaPIYzniilIY0LtLYCnql81XFbBttA/exec';
+
+    const form = document.getElementById('registrationForm');
+    const loadingMessage = document.getElementById('loadingMessage');
+    const messageContainer = document.getElementById('messageContainer');
+    const debugButton = document.getElementById('debugButton');
+
+    function showMessageBox(type, message) {
+      const messageClass = type === 'success' ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700';
+      const heading = type === 'success' ? 'Success!' : 'Submission Failed';
+
+      const overlayDiv = document.createElement('div');
+      overlayDiv.className = 'overlay';
+
+      const messageBoxDiv = document.createElement('div');
+      messageBoxDiv.className = `message-box ${messageClass}`;
+      messageBoxDiv.innerHTML = `
+        <h3 class="text-2xl font-bold mb-2">${heading}</h3>
+        <p class="text-lg">${message}</p>
+        <button class="mt-4 px-4 py-2 bg-gray-500 text-white rounded-md hover:bg-gray-600 transition-colors">Close</button>
+      `;
+
+      document.body.appendChild(overlayDiv);
+      document.body.appendChild(messageBoxDiv);
+
+      const closeButton = messageBoxDiv.querySelector('button');
+      closeButton.addEventListener('click', () => {
+        document.body.removeChild(overlayDiv);
+        document.body.removeChild(messageBoxDiv);
+      });
+    }
+
+    async function sendData(event) {
+      event.preventDefault();
+
+      loadingMessage.classList.remove('hidden');
+      messageContainer.innerHTML = '';
+      const formData = new FormData(form);
+      const data = Object.fromEntries(formData.entries());
+
+      // Handle files separately
+      const gpxFile = formData.get('gpxFile');
+      const photosFile = formData.get('photosFile');
+
+      // Convert files to base64
+      const filePromises = [];
+      if (gpxFile && gpxFile.size > 0) {
+        filePromises.push(readFileAsBase64(gpxFile).then(base64 => {
+          data.gpxFile = base64;
+          data.gpxFileName = gpxFile.name;
+        }));
+      }
+      if (photosFile && photosFile.size > 0) {
+        filePromises.push(readFileAsBase64(photosFile).then(base64 => {
+          data.photosFile = base64;
+          data.photosFileName = photosFile.name;
+        }));
+      }
+      
+      await Promise.all(filePromises);
+
+      try {
+        const response = await fetch(APPS_SCRIPT_URL, {
+          method: 'POST',
+          mode: 'no-cors',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(data),
         });
-        
-        // Modal functions
-        function showModal(title, message, isSuccess = true) {
-            modalTitle.textContent = title;
-            modalMessage.textContent = message;
-            if (isSuccess) {
-                modalIcon.classList.remove('bg-red-100', 'text-red-600');
-                modalIcon.classList.add('bg-green-100', 'text-green-600');
-                modalIcon.innerHTML = `<svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>`;
-            } else {
-                modalIcon.classList.remove('bg-green-100', 'text-green-600');
-                modalIcon.classList.add('bg-red-100', 'text-red-600');
-                modalIcon.innerHTML = `<svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>`;
-            }
-            modal.classList.remove('hidden');
-        }
-        
-        modalClose.addEventListener('click', () => {
-            modal.classList.add('hidden');
+
+        // The 'no-cors' mode prevents us from reading the response.
+        // We'll rely on the backend to successfully process the request.
+        // If the request completes without a network error, we assume success.
+        loadingMessage.classList.add('hidden');
+        showMessageBox('success', 'Thank you for your submission!');
+        form.reset();
+      } catch (error) {
+        loadingMessage.classList.add('hidden');
+        console.error('Submission failed:', error);
+        showMessageBox('error', 'The submission failed. Please try again or check your internet connection.');
+      }
+    }
+
+    function readFileAsBase64(file) {
+      return new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onload = () => resolve(reader.result);
+        reader.onerror = reject;
+        reader.readAsDataURL(file);
+      });
+    }
+
+    form.addEventListener('submit', sendData);
+
+    debugButton.addEventListener('click', async () => {
+      loadingMessage.classList.remove('hidden');
+      const debugData = {
+        fullName: 'Test Submission from Debug Button',
+        membershipNumber: 'DEBUG',
+        intendedDate: new Date().toISOString().split('T')[0],
+        challengeType: 'Debug Test',
+        paymentAmount: 0,
+        stravaLink: 'https://www.strava.com/activities/debug',
+        gpxFile: '',
+        gpxFileName: '',
+        photosFile: '',
+        photosFileName: ''
+      };
+
+      try {
+        await fetch(APPS_SCRIPT_URL, {
+          method: 'POST',
+          mode: 'no-cors',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(debugData),
         });
+        loadingMessage.classList.add('hidden');
+        showMessageBox('success', 'Debug submission sent successfully. Check your Google Sheet in a few moments.');
+      } catch (error) {
+        loadingMessage.classList.add('hidden');
+        console.error('Debug submission failed:', error);
+        showMessageBox('error', 'Debug submission failed. Check the browser console.');
+      }
+    });
 
-        // Payment calculation
-        function calculatePayment() {
-            let total = 0;
-            const selectedChallenge = document.querySelector('input[name="challengeType"]:checked');
-            if (selectedChallenge) {
-                total += parseFloat(selectedChallenge.getAttribute('data-fee'));
-                
-                // Add medal fee only if challenge is a Permanent
-                const isPermanent = selectedChallenge.value.includes('Permanent');
-                if (isPermanent && medalAddon.checked) {
-                    total += 7;
-                }
-            }
-            paymentSummary.textContent = `€${total}`;
-        }
-        
-        challengeTypes.forEach(radio => radio.addEventListener('change', calculatePayment));
-        medalAddon.addEventListener('change', calculatePayment);
-
-        // Form Submission Logic
-        registrationForm.addEventListener('submit', async (e) => {
-            e.preventDefault();
-            const formData = new FormData(registrationForm);
-            const data = {
-                fullName: formData.get('fullName'),
-                membershipNumber: formData.get('membershipNumber'),
-                intendedDate: formData.get('intendedDate'),
-                challengeType: formData.get('challengeType'),
-                paymentAmount: parseFloat(paymentSummary.textContent.replace('€', ''))
-            };
-            
-            await sendData(data);
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('/rrty/service-worker.js', {
+          scope: '/rrty/'
+        }).then(registration => {
+          console.log('Service Worker registered:', registration);
+        }).catch(error => {
+          console.log('Service Worker registration failed:', error);
         });
-        
-        submissionForm.addEventListener('submit', async (e) => {
-            e.preventDefault();
-            const formData = new FormData(submissionForm);
-            const data = {
-                fullName: formData.get('fullName'),
-                stravaLink: formData.get('stravaLink')
-            };
-
-            const gpxFile = formData.get('gpxFile');
-            if (gpxFile.size > 0) {
-                data.gpxFileName = gpxFile.name;
-                data.gpxFile = await fileToBase64(gpxFile);
-            }
-
-            const photosFile = formData.get('photosFile');
-            if (photosFile.size > 0) {
-                data.photosFileName = photosFile.name;
-                data.photosFile = await fileToBase64(photosFile);
-            }
-            
-            await sendData(data);
-        });
-
-        async function fileToBase64(file) {
-            return new Promise((resolve, reject) => {
-                const reader = new FileReader();
-                reader.onload = () => resolve(reader.result);
-                reader.onerror = error => reject(error);
-                reader.readAsDataURL(file);
-            });
-        }
-        
-        async function sendData(data) {
-            showLoading(true);
-            try {
-                const response = await fetch(APPS_SCRIPT_URL, {
-                    method: 'POST',
-                    mode: 'no-cors', // Required for Google Apps Script
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(data),
-                });
-                
-                // Since 'no-cors' mode is used, we can't read the response.
-                // We'll just assume success.
-                showModal('Success!', 'Your submission has been received. Thank you!', true);
-                registrationForm.reset();
-                submissionForm.reset();
-                calculatePayment(); // Reset payment amount
-                
-            } catch (error) {
-                console.error('Submission failed:', error);
-                showModal('Error', 'There was a problem submitting your data. Please try again.', false);
-            } finally {
-                showLoading(false);
-            }
-        }
-        
-        function showLoading(show) {
-            const forms = document.querySelectorAll('form button[type="submit"]');
-            forms.forEach(btn => {
-                btn.disabled = show;
-                if (show) {
-                    btn.innerHTML = `<div class="loading-spinner border-white" style="border-top-color: white;"></div>`;
-                } else {
-                    btn.innerHTML = btn.innerText; // Restore original text
-                }
-            });
-        }
-        
-        // Dashboard Data Fetching
-        async function fetchDashboardData() {
-            dashboardSpinner.style.display = 'block';
-            dashboardTableBody.innerHTML = '';
-            dashboardEmptyMessage.classList.add('hidden');
-
-            try {
-                const response = await fetch(APPS_SCRIPT_URL);
-                if (!response.ok) throw new Error('Network response was not ok');
-                
-                const result = await response.json();
-                
-                if (result.status === 'success' && result.data && result.data.length > 0) {
-                    result.data.forEach(entry => {
-                        const row = document.createElement('tr');
-                        row.classList.add('hover:bg-gray-50');
-                        const date = new Date(entry.Timestamp);
-                        row.innerHTML = `
-                            <td class="px-6 py-4 whitespace-nowrap">${entry.FullName}</td>
-                            <td class="px-6 py-4 whitespace-nowrap">${entry.IntendedDate}</td>
-                            <td class="px-6 py-4 whitespace-nowrap">${entry.ChallengeType}</td>
-                            <td class="px-6 py-4 whitespace-nowrap">
-                                <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${entry.PaymentConfirmed === 'N/A' ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'}">
-                                    ${entry.PaymentConfirmed}
-                                </span>
-                            </td>
-                        `;
-                        dashboardTableBody.appendChild(row);
-                    });
-                } else {
-                    dashboardEmptyMessage.classList.remove('hidden');
-                }
-                
-            } catch (error) {
-                console.error('Failed to fetch dashboard data:', error);
-                showModal('Error', 'Could not load dashboard data. Please try again later.', false);
-                dashboardEmptyMessage.classList.remove('hidden');
-            } finally {
-                dashboardSpinner.style.display = 'none';
-            }
-        }
-
-        // Initial setup
-        calculatePayment();
-        showSection('registration');
-    </script>
-
+      });
+    }
+  </script>
 </body>
+
 </html>
+
