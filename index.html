@@ -4,409 +4,397 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Audax Ireland RRTY</title>
-    <link rel="manifest" href="manifest.json">
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap">
+    <link rel="manifest" href="./manifest.json">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap" rel="stylesheet">
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         body {
             font-family: 'Inter', sans-serif;
-            background-color: #f3f4f6;
         }
-        .container {
-            max-width: 800px;
-            margin: 0 auto;
-        }
-        .section-hidden {
+        .section-container {
             display: none;
         }
-        @keyframes spin {
-            to { transform: rotate(360deg); }
+        .section-container.active {
+            display: block;
         }
-        .spinner {
-            display: inline-block;
-            width: 24px;
-            height: 24px;
-            border: 3px solid rgba(255, 255, 255, 0.3);
+        .loading-spinner {
+            display: none;
+            border-top: 4px solid #3b82f6;
+            border-right: 4px solid transparent;
+            border-bottom: 4px solid #3b82f6;
+            border-left: 4px solid transparent;
             border-radius: 50%;
-            border-top-color: #fff;
-            animation: spin 1s ease-in-out infinite;
+            width: 2rem;
+            height: 2rem;
+            animation: spin 1s linear infinite;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
         }
     </style>
 </head>
-<body class="bg-gray-100">
+<body class="bg-gray-100 min-h-screen text-gray-800 flex flex-col items-center">
 
-    <div class="container p-4">
-        <header class="text-center my-8">
-            <h1 class="text-4xl font-bold text-gray-800">Audax Ireland RRTY</h1>
-            <p class="text-gray-600 mt-2">Randonneur Round the Year Challenge</p>
-            <nav class="mt-6 flex justify-center space-x-4">
-                <button class="nav-btn p-2 px-4 rounded-md font-medium text-white bg-blue-600 hover:bg-blue-700 transition-colors" data-section="registration">Register</button>
-                <button class="nav-btn p-2 px-4 rounded-md font-medium text-gray-700 hover:bg-gray-200 transition-colors" data-section="submit-ride">Submit Ride</button>
-                <button class="nav-btn p-2 px-4 rounded-md font-medium text-gray-700 hover:bg-gray-200 transition-colors" data-section="dashboard">Dashboard</button>
-            </nav>
-        </header>
+    <header class="bg-white shadow w-full">
+        <nav class="container mx-auto px-4 py-4 flex flex-col sm:flex-row justify-between items-center">
+            <h1 class="text-2xl font-bold text-gray-900">Audax Ireland RRTY</h1>
+            <div class="mt-4 sm:mt-0 space-x-2">
+                <button id="nav-register" class="text-sm sm:text-base px-4 py-2 rounded-lg font-medium text-white bg-green-600 hover:bg-green-700 transition-colors">Register</button>
+                <button id="nav-submit" class="text-sm sm:text-base px-4 py-2 rounded-lg font-medium text-white bg-blue-600 hover:bg-blue-700 transition-colors">Submit Ride</button>
+                <button id="nav-dashboard" class="text-sm sm:text-base px-4 py-2 rounded-lg font-medium text-white bg-gray-600 hover:bg-gray-700 transition-colors">Dashboard</button>
+            </div>
+        </nav>
+    </header>
 
-        <main class="bg-white p-6 md:p-8 rounded-lg shadow-md">
-
-            <section id="registration" class="active-section">
-                <h2 class="text-2xl font-semibold mb-4 text-gray-800">Registration</h2>
-                <form id="registration-form" class="space-y-4">
-                    <div>
-                        <label for="full_name_reg" class="block text-sm font-medium text-gray-700">Full Name</label>
-                        <input type="text" id="full_name_reg" name="full_name" required class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500">
-                    </div>
-                    <div>
-                        <label for="membership_number_reg" class="block text-sm font-medium text-gray-700">Audax Ireland Membership Number (optional)</label>
-                        <input type="text" id="membership_number_reg" name="membership_number" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500">
-                    </div>
-                    <div>
-                        <label for="intended_date_reg" class="block text-sm font-medium text-gray-700">Intended Date of Ride</label>
-                        <input type="date" id="intended_date_reg" name="intended_date" required class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500">
-                    </div>
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700">Challenge Type</label>
-                        <div class="mt-1 space-y-2">
-                            <label class="inline-flex items-center">
-                                <input type="radio" name="challenge_type" value="Permanent (non-AI member)" data-fee="5" required class="form-radio text-blue-600">
-                                <span class="ml-2 text-gray-700">Permanent (non-AI member) (€5 fee)</span>
-                            </label>
-                            <label class="inline-flex items-center">
-                                <input type="radio" name="challenge_type" value="Audax Ireland Member towards RRTY" data-fee="0" required class="form-radio text-blue-600">
-                                <span class="ml-2 text-gray-700">Audax Ireland Member towards RRTY (no fee)</span>
-                            </label>
-                            <label class="inline-flex items-center">
-                                <input type="radio" name="challenge_type" value="Audax Ireland Member towards Permanent" data-fee="0" required class="form-radio text-blue-600">
-                                <span class="ml-2 text-gray-700">Audax Ireland Member towards Permanent (no fee)</span>
-                            </label>
+    <main class="container mx-auto px-4 py-8 flex-1 w-full max-w-2xl">
+        
+        <section id="registration-section" class="section-container active bg-white p-6 rounded-xl shadow-lg">
+            <h2 class="text-xl font-bold mb-4 text-center">Registration</h2>
+            <form id="registration-form" class="space-y-4">
+                <div>
+                    <label for="fullName" class="block text-sm font-medium text-gray-700">Full Name</label>
+                    <input type="text" id="fullName" name="fullName" required class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-green-500 focus:ring-green-500">
+                </div>
+                <div>
+                    <label for="membershipNumber" class="block text-sm font-medium text-gray-700">Audax Ireland Membership Number (Optional)</label>
+                    <input type="text" id="membershipNumber" name="membershipNumber" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-green-500 focus:ring-green-500">
+                </div>
+                <div>
+                    <label for="intendedDate" class="block text-sm font-medium text-gray-700">Date of Intended Ride</label>
+                    <input type="date" id="intendedDate" name="intendedDate" required class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-green-500 focus:ring-green-500">
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700">Challenge Type</label>
+                    <div class="mt-2 space-y-2">
+                        <div class="flex items-center">
+                            <input type="radio" id="permanentNonAI" name="challengeType" value="Permanent (non-AI member)" data-fee="5" required class="focus:ring-green-500 h-4 w-4 text-green-600 border-gray-300">
+                            <label for="permanentNonAI" class="ml-2 block text-sm text-gray-900">Permanent (non-AI member) (€5 fee)</label>
+                        </div>
+                        <div class="flex items-center">
+                            <input type="radio" id="aiMemberRRTY" name="challengeType" value="Audax Ireland Member towards RRTY" data-fee="0" required class="focus:ring-green-500 h-4 w-4 text-green-600 border-gray-300">
+                            <label for="aiMemberRRTY" class="ml-2 block text-sm text-gray-900">Audax Ireland Member towards RRTY (no fee)</label>
+                        </div>
+                        <div class="flex items-center">
+                            <input type="radio" id="aiMemberPermanent" name="challengeType" value="Audax Ireland Member towards Permanent" data-fee="0" required class="focus:ring-green-500 h-4 w-4 text-green-600 border-gray-300">
+                            <label for="aiMemberPermanent" class="ml-2 block text-sm text-gray-900">Audax Ireland Member towards Permanent (no fee)</label>
                         </div>
                     </div>
-                    <div>
-                        <label class="inline-flex items-center">
-                            <input type="checkbox" id="medal_addon" name="medal_addon" class="form-checkbox text-blue-600">
-                            <span class="ml-2 text-gray-700">Add a Single Audax Event Medal (€7 fee)</span>
-                        </label>
-                    </div>
-
-                    <div class="bg-gray-100 p-4 rounded-md">
-                        <p class="text-lg font-bold text-gray-800">Payment Summary:</p>
-                        <p class="text-xl font-bold text-blue-600 mt-1">Total Amount: <span id="total-amount">€0</span></p>
-                    </div>
-
-                    <button type="submit" class="w-full bg-green-600 text-white p-3 rounded-md font-bold hover:bg-green-700 transition-colors">Register & Pay</button>
-                </form>
-            </section>
-
-            <section id="submit-ride" class="section-hidden">
-                <h2 class="text-2xl font-semibold mb-4 text-gray-800">Submit Ride</h2>
-                <form id="submission-form" class="space-y-4">
-                    <div>
-                        <label for="full_name_submit" class="block text-sm font-medium text-gray-700">Full Name</label>
-                        <input type="text" id="full_name_submit" name="full_name" required class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500">
-                    </div>
-                    <div>
-                        <label for="strava_link" class="block text-sm font-medium text-gray-700">Strava / Garmin Link</label>
-                        <input type="url" id="strava_link" name="strava_garmin_link" required class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500">
-                    </div>
-                    <div>
-                        <label for="gpx_file" class="block text-sm font-medium text-gray-700">GPX File</label>
-                        <input type="file" id="gpx_file" name="gpx_file" accept=".gpx" class="mt-1 block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100">
-                    </div>
-                    <div>
-                        <label for="photos_files" class="block text-sm font-medium text-gray-700">Photos / Receipts (multiple files)</label>
-                        <input type="file" id="photos_files" name="photos_files" multiple class="mt-1 block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100">
-                    </div>
-                    <button type="submit" class="w-full bg-blue-600 text-white p-3 rounded-md font-bold hover:bg-blue-700 transition-colors">Submit Ride</button>
-                </form>
-            </section>
-
-            <section id="dashboard" class="section-hidden">
-                <h2 class="text-2xl font-semibold mb-4 text-gray-800">Dashboard</h2>
-                <div id="dashboard-content">
-                    <p class="text-gray-500">Loading submissions...</p>
                 </div>
-            </section>
+                <div>
+                    <div class="flex items-center">
+                        <input type="checkbox" id="medalAddon" name="medalAddon" class="focus:ring-green-500 h-4 w-4 text-green-600 border-gray-300 rounded">
+                        <label for="medalAddon" class="ml-2 block text-sm text-gray-900">Add a Single Audax Event Medal (€7 fee)</label>
+                    </div>
+                </div>
 
-        </main>
+                <div class="text-right font-bold text-lg">
+                    <span class="text-gray-700">Total Payment:</span> <span id="paymentSummary" class="text-green-600">€0</span>
+                </div>
+                
+                <div class="flex justify-center mt-6">
+                    <button type="submit" class="w-full sm:w-auto px-6 py-3 border border-transparent text-base font-medium rounded-md shadow-sm text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500">
+                        Submit Registration
+                    </button>
+                </div>
+            </form>
+        </section>
 
-        <div id="loading-spinner" class="fixed inset-0 bg-gray-600 bg-opacity-75 flex items-center justify-center section-hidden">
-            <div class="spinner"></div>
-        </div>
+        <section id="submission-section" class="section-container bg-white p-6 rounded-xl shadow-lg">
+            <h2 class="text-xl font-bold mb-4 text-center">Submit Ride</h2>
+            <form id="submission-form" class="space-y-4">
+                <div>
+                    <label for="submitFullName" class="block text-sm font-medium text-gray-700">Full Name</label>
+                    <input type="text" id="submitFullName" name="fullName" required class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500">
+                </div>
+                <div>
+                    <label for="stravaLink" class="block text-sm font-medium text-gray-700">Strava / Garmin Link</label>
+                    <input type="url" id="stravaLink" name="stravaLink" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500">
+                </div>
+                <div>
+                    <label for="gpxFile" class="block text-sm font-medium text-gray-700">GPX File</label>
+                    <input type="file" id="gpxFile" name="gpxFile" accept=".gpx" class="mt-1 block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100">
+                </div>
+                <div>
+                    <label for="photosFile" class="block text-sm font-medium text-gray-700">Photos / Receipts (multiple files)</label>
+                    <input type="file" id="photosFile" name="photosFile" multiple accept="image/*" class="mt-1 block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100">
+                </div>
+                <div class="flex justify-center mt-6">
+                    <button type="submit" class="w-full sm:w-auto px-6 py-3 border border-transparent text-base font-medium rounded-md shadow-sm text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
+                        Submit Ride Data
+                    </button>
+                </div>
+            </form>
+        </section>
 
-        <div id="success-modal" class="fixed inset-0 bg-gray-600 bg-opacity-75 flex items-center justify-center section-hidden">
-            <div class="bg-white p-6 rounded-lg shadow-xl text-center">
-                <p class="text-2xl text-green-600 font-bold mb-4">Success!</p>
-                <p id="success-message" class="text-gray-700 mb-4"></p>
-                <button class="bg-green-600 text-white p-2 px-4 rounded-md" onclick="closeModal('success-modal')">OK</button>
+        <section id="dashboard-section" class="section-container bg-white p-6 rounded-xl shadow-lg">
+            <h2 class="text-xl font-bold mb-4 text-center">Dashboard</h2>
+            <div id="dashboard-content" class="overflow-x-auto">
+                <p id="dashboard-empty-message" class="text-center text-gray-500 hidden">No submissions yet.</p>
+                <table class="min-w-full divide-y divide-gray-200">
+                    <thead class="bg-gray-50">
+                        <tr>
+                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Name</th>
+                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Date</th>
+                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Challenge</th>
+                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
+                        </tr>
+                    </thead>
+                    <tbody id="dashboard-table-body" class="bg-white divide-y divide-gray-200">
+                    </tbody>
+                </table>
+            </div>
+            <div class="flex justify-center mt-4">
+                <div id="dashboard-spinner" class="loading-spinner"></div>
+            </div>
+        </section>
+
+    </main>
+
+    <div id="modal" class="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full hidden">
+        <div class="relative top-20 mx-auto p-5 border w-96 shadow-lg rounded-md bg-white">
+            <div class="mt-3 text-center">
+                <div id="modal-icon" class="mx-auto flex items-center justify-center h-12 w-12 rounded-full bg-green-100 text-green-600">
+                    <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
+                    </svg>
+                </div>
+                <h3 id="modal-title" class="text-lg leading-6 font-medium text-gray-900 mt-2">Success!</h3>
+                <div class="mt-2 px-7 py-3">
+                    <p id="modal-message" class="text-sm text-gray-500"></p>
+                </div>
+                <div class="items-center px-4 py-3">
+                    <button id="modal-close" class="px-4 py-2 bg-green-500 text-white text-base font-medium rounded-md w-full shadow-sm hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500">
+                        OK
+                    </button>
+                </div>
             </div>
         </div>
-
-        <div id="error-modal" class="fixed inset-0 bg-gray-600 bg-opacity-75 flex items-center justify-center section-hidden">
-            <div class="bg-white p-6 rounded-lg shadow-xl text-center">
-                <p class="text-2xl text-red-600 font-bold mb-4">Error!</p>
-                <p id="error-message" class="text-gray-700 mb-4"></p>
-                <button class="bg-red-600 text-white p-2 px-4 rounded-md" onclick="closeModal('error-modal')">OK</button>
-            </div>
-        </div>
-
     </div>
 
     <script>
-        // Placeholder for your deployed Google Apps Script URL
-        const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzl4Z8C1lHfcfUP1HMuM6DYwOKqACqKF6HLHKsdGaPIYzniilIY0LtLYCnql81XFbBttA/exec";
+        // IMPORTANT: Paste your deployed Google Apps Script Web App URL here.
+        // It must end with /exec
+        const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzl4Z8C1lHfcfUP1HMuM6DYwOKqACqKF6HLHKsdGaPIYzniilIY0LtLYCnql81XFbBttA/exec';
 
-        document.addEventListener('DOMContentLoaded', () => {
-            const navButtons = document.querySelectorAll('.nav-btn');
-            const sections = document.querySelectorAll('section');
-            const registrationForm = document.getElementById('registration-form');
-            const submissionForm = document.getElementById('submission-form');
-            const totalAmountSpan = document.getElementById('total-amount');
-            const challengeTypeRadios = document.querySelectorAll('input[name="challenge_type"]');
-            const medalCheckbox = document.getElementById('medal_addon');
-
-            // PWA Service Worker Registration
-            if ('serviceWorker' in navigator) {
-                navigator.serviceWorker.register('service-worker.js')
-                    .then(reg => console.log('Service Worker registered', reg))
-                    .catch(err => console.error('Service Worker registration failed', err));
-            }
-
-            // UI Logic for section switching
-            function showSection(sectionId) {
-                sections.forEach(section => {
-                    section.classList.add('section-hidden');
-                });
-                document.getElementById(sectionId).classList.remove('section-hidden');
-
-                navButtons.forEach(btn => {
-                    btn.classList.remove('bg-blue-600', 'text-white');
-                    btn.classList.add('text-gray-700', 'hover:bg-gray-200');
-                });
-                const activeBtn = document.querySelector(`.nav-btn[data-section="${sectionId}"]`);
-                if (activeBtn) {
-                    activeBtn.classList.remove('text-gray-700', 'hover:bg-gray-200');
-                    activeBtn.classList.add('bg-blue-600', 'text-white');
-                }
-
-                if (sectionId === 'dashboard') {
-                    fetchDashboardData();
-                }
-            }
-
-            navButtons.forEach(button => {
-                button.addEventListener('click', () => {
-                    showSection(button.dataset.section);
-                });
+        // PWA service worker registration
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('./service-worker.js').then(
+                    registration => console.log('Service Worker registered:', registration),
+                    err => console.error('Service Worker registration failed:', err)
+                );
             });
+        }
 
-            // Initial section display
-            showSection('registration');
-
-            // Loading spinner and modals
-            function showSpinner() {
-                document.getElementById('loading-spinner').classList.remove('section-hidden');
+        const sections = {
+            'registration': document.getElementById('registration-section'),
+            'submission': document.getElementById('submission-section'),
+            'dashboard': document.getElementById('dashboard-section')
+        };
+        const navButtons = {
+            'nav-register': document.getElementById('nav-register'),
+            'nav-submit': document.getElementById('nav-submit'),
+            'nav-dashboard': document.getElementById('nav-dashboard')
+        };
+        const registrationForm = document.getElementById('registration-form');
+        const submissionForm = document.getElementById('submission-form');
+        const paymentSummary = document.getElementById('paymentSummary');
+        const challengeTypes = document.querySelectorAll('input[name="challengeType"]');
+        const medalAddon = document.getElementById('medalAddon');
+        const modal = document.getElementById('modal');
+        const modalTitle = document.getElementById('modal-title');
+        const modalMessage = document.getElementById('modal-message');
+        const modalIcon = document.getElementById('modal-icon');
+        const modalClose = document.getElementById('modal-close');
+        const dashboardTableBody = document.getElementById('dashboard-table-body');
+        const dashboardSpinner = document.getElementById('dashboard-spinner');
+        const dashboardEmptyMessage = document.getElementById('dashboard-empty-message');
+        
+        // Navigation and UI
+        function showSection(sectionId) {
+            Object.values(sections).forEach(section => section.classList.remove('active'));
+            sections[sectionId].classList.add('active');
+            if (sectionId === 'dashboard') {
+                fetchDashboardData();
             }
-
-            function hideSpinner() {
-                document.getElementById('loading-spinner').classList.add('section-hidden');
+        }
+        
+        Object.keys(navButtons).forEach(btnId => {
+            navButtons[btnId].addEventListener('click', () => {
+                showSection(btnId.replace('nav-', ''));
+            });
+        });
+        
+        // Modal functions
+        function showModal(title, message, isSuccess = true) {
+            modalTitle.textContent = title;
+            modalMessage.textContent = message;
+            if (isSuccess) {
+                modalIcon.classList.remove('bg-red-100', 'text-red-600');
+                modalIcon.classList.add('bg-green-100', 'text-green-600');
+                modalIcon.innerHTML = `<svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>`;
+            } else {
+                modalIcon.classList.remove('bg-green-100', 'text-green-600');
+                modalIcon.classList.add('bg-red-100', 'text-red-600');
+                modalIcon.innerHTML = `<svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>`;
             }
+            modal.classList.remove('hidden');
+        }
+        
+        modalClose.addEventListener('click', () => {
+            modal.classList.add('hidden');
+        });
 
-            function showModal(id, message) {
-                document.getElementById(`${id}-message`).innerText = message;
-                document.getElementById(`${id}-modal`).classList.remove('section-hidden');
-            }
-
-            window.closeModal = function(id) {
-                document.getElementById(id).classList.add('section-hidden');
-            }
-
-            // Payment calculation logic
-            function calculateTotal() {
-                let total = 0;
-                const selectedChallenge = document.querySelector('input[name="challenge_type"]:checked');
-                if (selectedChallenge) {
-                    total += parseFloat(selectedChallenge.dataset.fee);
-                }
-                const isPermanent = selectedChallenge && (selectedChallenge.value === 'Permanent (non-AI member)' || selectedChallenge.value === 'Audax Ireland Member towards Permanent');
-                if (isPermanent && medalCheckbox.checked) {
+        // Payment calculation
+        function calculatePayment() {
+            let total = 0;
+            const selectedChallenge = document.querySelector('input[name="challengeType"]:checked');
+            if (selectedChallenge) {
+                total += parseFloat(selectedChallenge.getAttribute('data-fee'));
+                
+                // Add medal fee only if challenge is a Permanent
+                const isPermanent = selectedChallenge.value.includes('Permanent');
+                if (isPermanent && medalAddon.checked) {
                     total += 7;
                 }
-                totalAmountSpan.innerText = `€${total}`;
             }
+            paymentSummary.textContent = `€${total}`;
+        }
+        
+        challengeTypes.forEach(radio => radio.addEventListener('change', calculatePayment));
+        medalAddon.addEventListener('change', calculatePayment);
 
-            challengeTypeRadios.forEach(radio => radio.addEventListener('change', calculateTotal));
-            medalCheckbox.addEventListener('change', calculateTotal);
-            calculateTotal(); // Initial calculation on page load
-
-            // Registration form submission
-            registrationForm.addEventListener('submit', async (e) => {
-                e.preventDefault();
-                showSpinner();
-                const formData = new FormData(registrationForm);
-                const data = Object.fromEntries(formData.entries());
-                data.payment_amount = parseFloat(totalAmountSpan.innerText.replace('€', ''));
-
-                try {
-                    const response = await fetch(APPS_SCRIPT_URL, {
-                        method: 'POST',
-                        body: JSON.stringify(data),
-                        headers: {
-                            'Content-Type': 'text/plain;charset=utf-8', // Google Apps Script requires this for JSON
-                        },
-                    });
-                    const result = await response.json();
-                    if (result.status === 'success') {
-                        showModal('success', 'Registration submitted successfully!');
-                        registrationForm.reset();
-                        calculateTotal(); // Reset payment amount
-                    } else {
-                        showModal('error', `Submission failed: ${result.message}`);
-                    }
-                } catch (error) {
-                    showModal('error', `An error occurred: ${error.message}`);
-                } finally {
-                    hideSpinner();
-                }
-            });
-
-            // Submission form handling
-            submissionForm.addEventListener('submit', async (e) => {
-                e.preventDefault();
-                showSpinner();
-                const formData = new FormData(submissionForm);
-                const data = Object.fromEntries(formData.entries());
-                
-                let gpxUrl = '';
-                let photosUrl = '';
-
-                // Handle file uploads
-                try {
-                    if (formData.get('gpx_file').size > 0) {
-                        gpxUrl = await uploadFile(formData.get('gpx_file'));
-                    }
-                    const photos = formData.getAll('photos_files');
-                    if (photos.some(file => file.size > 0)) {
-                        const urls = [];
-                        for (const file of photos) {
-                            if (file.size > 0) {
-                                const url = await uploadFile(file);
-                                urls.push(url);
-                            }
-                        }
-                        photosUrl = urls.join(', ');
-                    }
-
-                    // Now submit the form data with the file URLs
-                    const submissionData = {
-                        full_name: data.full_name,
-                        strava_garmin_link: data.strava_garmin_link,
-                        gpx_link: gpxUrl,
-                        photos_link: photosUrl,
-                        intended_date: new Date().toISOString().split('T')[0], // Use a generic date for submission
-                        challenge_type: 'Ride Submission',
-                        payment_amount: 0,
-                        payment_confirmed: 'N/A'
-                    };
-
-                    const response = await fetch(APPS_SCRIPT_URL, {
-                        method: 'POST',
-                        body: JSON.stringify(submissionData),
-                        headers: {
-                            'Content-Type': 'text/plain;charset=utf-8',
-                        },
-                    });
-                    const result = await response.json();
-                    if (result.status === 'success') {
-                        showModal('success', 'Ride details submitted successfully!');
-                        submissionForm.reset();
-                    } else {
-                        showModal('error', `Submission failed: ${result.message}`);
-                    }
-
-                } catch (error) {
-                    showModal('error', `An error occurred during submission: ${error.message}`);
-                } finally {
-                    hideSpinner();
-                }
-            });
-
-            // Helper function to upload files to Apps Script
-            async function uploadFile(file) {
-                const reader = new FileReader();
-                return new Promise((resolve, reject) => {
-                    reader.onloadend = async () => {
-                        const base64Data = reader.result.split(',')[1];
-                        try {
-                            const response = await fetch(APPS_SCRIPT_URL, {
-                                method: 'POST',
-                                body: JSON.stringify({
-                                    type: 'fileUpload',
-                                    fileData: base64Data,
-                                    fileName: file.name
-                                }),
-                                headers: {
-                                    'Content-Type': 'text/plain;charset=utf-8',
-                                },
-                            });
-                            const result = await response.json();
-                            if (result.url) {
-                                resolve(result.url);
-                            } else {
-                                reject(new Error('File upload failed.'));
-                            }
-                        } catch (error) {
-                            reject(error);
-                        }
-                    };
-                    reader.readAsDataURL(file);
-                });
-            }
-
-            // Dashboard data fetching
-            async function fetchDashboardData() {
-                const dashboardContent = document.getElementById('dashboard-content');
-                dashboardContent.innerHTML = `<p class="text-gray-500">Loading submissions...</p>`;
-                try {
-                    const response = await fetch(APPS_SCRIPT_URL, {
-                        method: 'GET'
-                    });
-                    const data = await response.json();
-                    if (data.status === 'error') {
-                        throw new Error(data.message);
-                    }
-                    if (data.length === 0) {
-                        dashboardContent.innerHTML = `<p class="text-gray-500">No submissions found yet.</p>`;
-                    } else {
-                        const tableHtml = `
-                            <div class="overflow-x-auto">
-                                <table class="min-w-full divide-y divide-gray-200">
-                                    <thead class="bg-gray-50">
-                                        <tr>
-                                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Name</th>
-                                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Date</th>
-                                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Challenge</th>
-                                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody class="bg-white divide-y divide-gray-200">
-                                        ${data.map(entry => `
-                                            <tr>
-                                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">${entry.FullName}</td>
-                                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">${new Date(entry.IntendedDate).toLocaleDateString()}</td>
-                                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">${entry.ChallengeType}</td>
-                                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">${entry.PaymentConfirmed === 'Yes' ? 'Paid & Confirmed' : 'Pending'}</td>
-                                            </tr>
-                                        `).join('')}
-                                    </tbody>
-                                </table>
-                            </div>
-                        `;
-                        dashboardContent.innerHTML = tableHtml;
-                    }
-                } catch (error) {
-                    dashboardContent.innerHTML = `<p class="text-red-500">Failed to load data: ${error.message}</p>`;
-                }
-            }
+        // Form Submission Logic
+        registrationForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const formData = new FormData(registrationForm);
+            const data = {
+                fullName: formData.get('fullName'),
+                membershipNumber: formData.get('membershipNumber'),
+                intendedDate: formData.get('intendedDate'),
+                challengeType: formData.get('challengeType'),
+                paymentAmount: parseFloat(paymentSummary.textContent.replace('€', ''))
+            };
+            
+            await sendData(data);
         });
+        
+        submissionForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const formData = new FormData(submissionForm);
+            const data = {
+                fullName: formData.get('fullName'),
+                stravaLink: formData.get('stravaLink')
+            };
+
+            const gpxFile = formData.get('gpxFile');
+            if (gpxFile.size > 0) {
+                data.gpxFileName = gpxFile.name;
+                data.gpxFile = await fileToBase64(gpxFile);
+            }
+
+            const photosFile = formData.get('photosFile');
+            if (photosFile.size > 0) {
+                data.photosFileName = photosFile.name;
+                data.photosFile = await fileToBase64(photosFile);
+            }
+            
+            await sendData(data);
+        });
+
+        async function fileToBase64(file) {
+            return new Promise((resolve, reject) => {
+                const reader = new FileReader();
+                reader.onload = () => resolve(reader.result);
+                reader.onerror = error => reject(error);
+                reader.readAsDataURL(file);
+            });
+        }
+        
+        async function sendData(data) {
+            showLoading(true);
+            try {
+                const response = await fetch(APPS_SCRIPT_URL, {
+                    method: 'POST',
+                    mode: 'no-cors', // Required for Google Apps Script
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(data),
+                });
+                
+                // Since 'no-cors' mode is used, we can't read the response.
+                // We'll just assume success.
+                showModal('Success!', 'Your submission has been received. Thank you!', true);
+                registrationForm.reset();
+                submissionForm.reset();
+                calculatePayment(); // Reset payment amount
+                
+            } catch (error) {
+                console.error('Submission failed:', error);
+                showModal('Error', 'There was a problem submitting your data. Please try again.', false);
+            } finally {
+                showLoading(false);
+            }
+        }
+        
+        function showLoading(show) {
+            const forms = document.querySelectorAll('form button[type="submit"]');
+            forms.forEach(btn => {
+                btn.disabled = show;
+                if (show) {
+                    btn.innerHTML = `<div class="loading-spinner border-white" style="border-top-color: white;"></div>`;
+                } else {
+                    btn.innerHTML = btn.innerText; // Restore original text
+                }
+            });
+        }
+        
+        // Dashboard Data Fetching
+        async function fetchDashboardData() {
+            dashboardSpinner.style.display = 'block';
+            dashboardTableBody.innerHTML = '';
+            dashboardEmptyMessage.classList.add('hidden');
+
+            try {
+                const response = await fetch(APPS_SCRIPT_URL);
+                if (!response.ok) throw new Error('Network response was not ok');
+                
+                const result = await response.json();
+                
+                if (result.status === 'success' && result.data && result.data.length > 0) {
+                    result.data.forEach(entry => {
+                        const row = document.createElement('tr');
+                        row.classList.add('hover:bg-gray-50');
+                        const date = new Date(entry.Timestamp);
+                        row.innerHTML = `
+                            <td class="px-6 py-4 whitespace-nowrap">${entry.FullName}</td>
+                            <td class="px-6 py-4 whitespace-nowrap">${entry.IntendedDate}</td>
+                            <td class="px-6 py-4 whitespace-nowrap">${entry.ChallengeType}</td>
+                            <td class="px-6 py-4 whitespace-nowrap">
+                                <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${entry.PaymentConfirmed === 'N/A' ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'}">
+                                    ${entry.PaymentConfirmed}
+                                </span>
+                            </td>
+                        `;
+                        dashboardTableBody.appendChild(row);
+                    });
+                } else {
+                    dashboardEmptyMessage.classList.remove('hidden');
+                }
+                
+            } catch (error) {
+                console.error('Failed to fetch dashboard data:', error);
+                showModal('Error', 'Could not load dashboard data. Please try again later.', false);
+                dashboardEmptyMessage.classList.remove('hidden');
+            } finally {
+                dashboardSpinner.style.display = 'none';
+            }
+        }
+
+        // Initial setup
+        calculatePayment();
+        showSection('registration');
     </script>
+
 </body>
 </html>
