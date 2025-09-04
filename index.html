@@ -197,19 +197,21 @@
       try {
         const response = await fetch(APPS_SCRIPT_URL, {
           method: 'POST',
-          mode: 'no-cors',
           headers: {
             'Content-Type': 'application/json',
           },
           body: JSON.stringify(data),
         });
 
-        // The 'no-cors' mode prevents us from reading the response.
-        // We'll rely on the backend to successfully process the request.
-        // If the request completes without a network error, we assume success.
+        const result = await response.json();
         loadingMessage.classList.add('hidden');
-        showMessageBox('success', 'Thank you for your submission!');
-        form.reset();
+        
+        if (result.status === 'success') {
+          showMessageBox('success', 'Thank you for your submission!');
+          form.reset();
+        } else {
+          showMessageBox('error', 'Submission failed: ' + result.message);
+        }
       } catch (error) {
         loadingMessage.classList.add('hidden');
         console.error('Submission failed:', error);
@@ -244,16 +246,22 @@
       };
 
       try {
-        await fetch(APPS_SCRIPT_URL, {
+        const response = await fetch(APPS_SCRIPT_URL, {
           method: 'POST',
-          mode: 'no-cors',
           headers: {
             'Content-Type': 'application/json',
           },
           body: JSON.stringify(debugData),
         });
+
+        const result = await response.json();
         loadingMessage.classList.add('hidden');
-        showMessageBox('success', 'Debug submission sent successfully. Check your Google Sheet in a few moments.');
+        
+        if (result.status === 'success') {
+          showMessageBox('success', 'Debug submission sent successfully. Check your Google Sheet in a few moments.');
+        } else {
+          showMessageBox('error', 'Debug submission failed: ' + result.message);
+        }
       } catch (error) {
         loadingMessage.classList.add('hidden');
         console.error('Debug submission failed:', error);
