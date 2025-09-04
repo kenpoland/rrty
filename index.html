@@ -81,19 +81,21 @@
           <label for="challengeType" class="block text-sm font-medium text-gray-700">Challenge Type</label>
           <select id="challengeType" name="challengeType" required
             class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm p-2">
-            <option value="Audax Ireland Member towards RRTY">Audax Ireland Member towards RRTY</option>
-            <option value="Audax UK Member towards RRTY">Audax UK Member towards RRTY</option>
+            <option value="EaCy 100">EaCy 100</option>
+            <option value="EaCy 200">EaCy 200</option>
           </select>
         </div>
+        <!-- 
         <div>
           <label for="paymentAmount" class="block text-sm font-medium text-gray-700">Payment Amount (€)</label>
           <input type="number" name="paymentAmount" id="paymentAmount" value="0" min="0" required
             class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm p-2">
         </div>
+         -->
       </div>
 
       <div class="bg-gray-50 p-6 rounded-xl border border-gray-200">
-        <h2 class="text-xl sm:text-2xl font-bold text-gray-800 mb-4">Submission Links & Files</h2>
+        <h2 class="text-xl sm:text-2xl font-bold text-gray-800 mb-4">Submit completed form and/or proof of route completion</h2>
         <div>
           <label for="stravaLink" class="block text-sm font-medium text-gray-700">Strava Link (Optional)</label>
           <input type="url" name="stravaLink" id="stravaLink"
@@ -131,7 +133,7 @@
 
   <script>
     // IMPORTANT: Replace this with your actual Apps Script Web App URL.
-    const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwR27jFO0_hJ83SSxjH8uv0B8IoInFxn2teBgrWVt2MD85xI0bFSyqTXePcqQR1Jy-5ig/exec';
+    const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzl4Z8C1lHfcfUP1HMuM6DYwOKqACqKF6HLHKsdGaPIYzniilIY0LtLYCnql81XFbBttA/exec';
 
     const form = document.getElementById('registrationForm');
     const loadingMessage = document.getElementById('loadingMessage');
@@ -274,4 +276,3 @@
 </body>
 
 </html>
-
